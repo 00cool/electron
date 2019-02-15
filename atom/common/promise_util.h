@@ -46,6 +46,18 @@ class Promise : public base::RefCounted<Promise> {
     return GetInner()->Reject(GetContext(), v8::Undefined(isolate()));
   }
 
+  v8::MaybeLocal<v8::Promise> Then() {
+    v8::HandleScope handle_scope(isolate());
+    v8::MicrotasksScope script_scope(isolate(),
+                                     v8::MicrotasksScope::kRunMicrotasks);
+    v8::Context::Scope context_scope(
+        v8::Local<v8::Context>::New(isolate(), GetContext()));
+    v8::Local<v8::Function> handler =
+        v8::Local<v8::Function>::Cast(v8::Undefined(isolate()));
+
+    return GetHandle()->Then(GetContext(), handler);
+  }
+
   // Promise resolution is a microtask
   // We use the MicrotasksRunner to trigger the running of pending microtasks
   template <typename T>
@@ -70,6 +82,18 @@ class Promise : public base::RefCounted<Promise> {
 
     return GetInner()->Reject(GetContext(),
                               mate::ConvertToV8(isolate(), value));
+  }
+
+  template <typename T>
+  v8::MaybeLocal<v8::Promise> Then(const T& value) {
+    v8::HandleScope handle_scope(isolate());
+    v8::MicrotasksScope script_scope(isolate(),
+                                     v8::MicrotasksScope::kRunMicrotasks);
+    v8::Context::Scope context_scope(
+        v8::Local<v8::Context>::New(isolate(), GetContext()));
+    v8::Local<v8::Function> handler = v8::Local<v8::Function>::Cast(value);
+
+    return GetHandle()->Then(GetContext(), handler);
   }
 
   v8::Maybe<bool> RejectWithErrorMessage(const std::string& error);
