@@ -48,8 +48,6 @@ class Promise : public base::RefCounted<Promise> {
 
   v8::MaybeLocal<v8::Promise> Then() {
     v8::HandleScope handle_scope(isolate());
-    v8::MicrotasksScope script_scope(isolate(),
-                                     v8::MicrotasksScope::kRunMicrotasks);
     v8::Context::Scope context_scope(
         v8::Local<v8::Context>::New(isolate(), GetContext()));
     v8::Local<v8::Function> handler =
@@ -87,8 +85,6 @@ class Promise : public base::RefCounted<Promise> {
   template <typename T>
   v8::MaybeLocal<v8::Promise> Then(const T& value) {
     v8::HandleScope handle_scope(isolate());
-    v8::MicrotasksScope script_scope(isolate(),
-                                     v8::MicrotasksScope::kRunMicrotasks);
     v8::Context::Scope context_scope(
         v8::Local<v8::Context>::New(isolate(), GetContext()));
     v8::Local<v8::Function> handler = v8::Local<v8::Function>::Cast(value);
