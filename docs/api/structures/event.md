@@ -1,6 +1,6 @@
 # Event Object extends `GlobalEvent`
 
-* `preventDefault` Function
+* `preventDefault` VoidFunction
 * `sender` WebContents
 * `returnValue` any
 * `ctrlKey` Boolean (optional) - whether the Control key was used in an accelerator to trigger the Event
